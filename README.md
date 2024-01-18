@@ -1,0 +1,2 @@
+1 添加.env
+NEXTAUTH_SECRET

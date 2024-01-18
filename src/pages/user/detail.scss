@@ -1,0 +1,45 @@
+.user-detail {
+  padding: 20px;
+
+  .user-detail-header {
+    font-size: 24px;
+
+    .intro {
+      font-size: 16px;
+      color: #aaa;
+    }
+  }
+
+  .content {
+    margin-top: 20px;
+
+    .content-title {
+      font-size: 20px;
+    }
+
+    .select-row {
+      margin-top: 20px;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  .table-box {
+    margin-top: 20px;
+    .table-box-title {
+      font-size: 22px;
+    }
+
+    .table {
+      margin-top: 20px;
+    }
+  }
+
+
+
+
+}

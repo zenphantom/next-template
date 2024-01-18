@@ -1,0 +1,19 @@
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .header-title {
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .user-info {
+    .username {
+      color: #fff;
+    }
+  }
+}

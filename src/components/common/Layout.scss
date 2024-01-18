@@ -1,0 +1,11 @@
+.common-layout {
+
+  .content-bottom {
+    height: calc(100vh - 64px);
+
+    .content-right {
+      height: calc(100vh - 64px);
+      overflow-y: scroll;
+    }
+  }
+}

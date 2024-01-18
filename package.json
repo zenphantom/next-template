@@ -1,0 +1,45 @@
+{
+  "name": "next-template",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3091",
+    "build": "next build",
+    "start": "next start -p 3091",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@prisma/client": "5.1.1",
+    "@types/node": "20.2.3",
+    "@types/react": "18.2.6",
+    "@types/react-dom": "18.2.4",
+    "@vercel/node": "^2.15.3",
+    "antd": "^5.8.1",
+    "autoprefixer": "10.4.14",
+    "axios": "^1.4.0",
+    "classnames": "^2.3.2",
+    "eslint": "8.41.0",
+    "eslint-config-next": "13.4.3",
+    "https-proxy-agent": "^7.0.0",
+    "moment": "^2.29.4",
+    "next": "13.4.3",
+    "next-auth": "^4.22.1",
+    "node-fetch": "^3.3.1",
+    "postcss": "8.4.23",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "^6.11.2",
+    "sass": "^1.62.1",
+    "socks-proxy-agent": "7.0.0",
+    "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "@types/lodash.size": "^4.2.7",
+    "prettier": "^3.0.0",
+    "prisma": "4.16.1"
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "main": "next.config.js",
+  "author": "rapierzhang",
+  "license": "ISC"
+}

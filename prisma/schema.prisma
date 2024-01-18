@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// // 账户表
+// model Account {
+//   id        Int      @id @default(autoincrement())
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "account_ibfk_1")
+//   userId    Int?     @map("user_id") @db.Int()
+//   createdAt DateTime @default(now()) @map("created_at")
+//   updatedAt DateTime @updatedAt @map("updated_at")
+//   deleted   Int?     @default(0) @db.TinyInt() // 逻辑删除:0=未删除,1=已删除
+// }
+
+// 用户表
+model User {
+  id             Int             @id @default(autoincrement())
+  state          Int             @default(1) @db.TinyInt() // 1:正常 2:禁用
+  name           String?         @unique @db.VarChar(255) // 用户名
+  departmentName String?         @map("department_name") @db.VarChar(255) // 部门
+  departmentId   String?         @map("department_id") @db.VarChar(255)
+  avatar         String?         @db.VarChar(255) // 头像
+  mobile         String?         @db.VarChar(11) // 电话
+  email          String?         @db.VarChar(255) // 邮箱
+  createdAt      DateTime        @default(now()) @map("created_at")
+  creator        String?         @db.VarChar(64)
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  editor         String?         @db.VarChar(64)
+  deleted        Int?            @default(0) @db.TinyInt() // 逻辑删除:0=未删除,1=已删除
+  userGroupUser  UserGroupUser[]
+  userRole       UserRole[]
+
+  @@map("user")
+}
+
+// 角色表
+model Role {
+  id             Int              @id @default(autoincrement())
+  code           String           @unique @db.VarChar(255) // 角色code
+  name           String           @unique @db.VarChar(255) // 角色名称
+  intro          String?          @db.VarChar(255) // 角色介绍
+  createdAt      DateTime         @default(now()) @map("created_at")
+  creator        String?          @db.VarChar(36)
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  editor         String?          @db.VarChar(36)
+  deleted        Int?             @default(0) @db.TinyInt() // 逻辑删除:0=未删除,1=已删除
+  rolePermission RolePermission[]
+  userGroupRole  UserGroupRole[]
+  userRole       UserRole[]
+
+  @@index([code], map: "code")
+  @@map("role")
+}
+
+// 权限表
+model Permission {
+  id             Int              @id @default(autoincrement())
+  code           String           @unique @db.VarChar(255) // 权限code
+  name           String           @unique @db.VarChar(255) // 权限名称
+  intro          String?          @db.VarChar(255) // 权限介绍
+  category       Int?             @default(1) @db.Int() // 权限类别
+  createdAt      DateTime         @default(now()) @map("created_at")
+  creator        String?          @db.VarChar(36)
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  editor         String?          @db.VarChar(36)
+  deleted        Int?             @default(0) @db.TinyInt() // 逻辑删除:0=未删除,1=已删除
+  rolePermission RolePermission[]
+
+  @@index([code], map: "code")
+  @@map("permission")
+}
+
+// 用户—角色表
+model UserRole {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @map("user_id")
+  roleId    Int?     @map("role_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  creator   String?  @db.VarChar(36)
+  updatedAt DateTime @updatedAt @map("updated_at")
+  editor    String?  @db.VarChar(36)
+  deleted   Int?     @default(0) @db.TinyInt() // 逻辑删除:0=未删除,1=已删除
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "user_role_ibfk_1")
+  role      Role?    @relation(fields: [roleId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "user_role_ibfk_2")
+
+  @@index([userId], map: "member_id")
+  @@index([roleId], map: "role_id")
+  @@map("user_role")
+}
+
+model RolePermission {
+  id           Int         @id @default(autoincrement())
+  roleId       Int?        @map("role_id")
+  permissionId Int?        @map("permission_id")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  creator      String?     @db.VarChar(36)
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  editor       String?     @db.VarChar(36)
+  deleted      Int?        @default(0) @db.TinyInt() // 逻辑删除:0=未删除,1=已删除
+  role         Role?       @relation(fields: [roleId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "role_permission_ibfk_1")
+  permission   Permission? @relation(fields: [permissionId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "role_permission_ibfk_2")
+
+  @@index([permissionId], map: "permission_id")
+  @@index([roleId], map: "role_id")
+  @@map("role_permission")
+}
+
+model UserGroup {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(255)
+  code          String          @unique @db.VarChar(255)
+  intro         String?         @unique @db.VarChar(255)
+  createdAt     DateTime        @default(now()) @map("created_at")
+  creator       String?         @db.VarChar(36)
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+  editor        String?         @db.VarChar(36)
+  deleted       Int?            @default(0) @db.TinyInt() // 逻辑删除:0=未删除,1=已删除
+  userGroupRole UserGroupRole[]
+  userGroupUser UserGroupUser[]
+
+  @@index([code], map: "code")
+  @@map("user_group")
+}
+
+model UserGroupUser {
+  id          Int        @id @default(autoincrement())
+  userGroupId Int?       @map("user_group_id")
+  userId      Int?       @map("user_id")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  creator     String?    @db.VarChar(36)
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  editor      String?    @db.VarChar(36)
+  deleted     Int?       @default(0) @db.TinyInt() // 逻辑删除:0=未删除,1=已删除
+  userGroup   UserGroup? @relation(fields: [userGroupId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "user_group_user_ibfk_1")
+  user        User?      @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "user_group_user_ibfk_2")
+
+  @@index([userGroupId], map: "member_group_id")
+  @@index([userId], map: "member_id")
+  @@map("user_group_user")
+}
+
+model UserGroupRole {
+  id          Int        @id @default(autoincrement())
+  userGroupId Int?       @map("user_group_id")
+  roleId      Int?       @map("role_id")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  creator     String?    @db.VarChar(36)
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  editor      String?    @db.VarChar(36)
+  deleted     Int?       @default(0) @db.TinyInt() // 逻辑删除:0=未删除,1=已删除
+  userGroup   UserGroup? @relation(fields: [userGroupId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "user_group_role_ibfk_1")
+  role        Role?      @relation(fields: [roleId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "user_group_role_ibfk_2")
+
+  @@index([userGroupId], map: "member_group_id")
+  @@index([roleId], map: "role_id")
+  @@map("user_group_role")
+}
